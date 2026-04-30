@@ -1,0 +1,171 @@
+---
+
+---
+
+<div id="canvas-container"></div>
+
+<style>
+  #canvas-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: #000000;
+  }
+</style>
+
+<script>
+  import * as THREE from "three";
+
+  class ScannedLightBackground {
+    declare container: HTMLElement | null;
+    declare scene: THREE.Scene;
+    declare camera: THREE.PerspectiveCamera;
+    declare renderer: THREE.WebGLRenderer;
+    declare streaks: THREE.Group[];
+    declare colors: THREE.Color[];
+
+    constructor() {
+      this.container = document.getElementById("canvas-container");
+      this.scene = new THREE.Scene();
+      this.camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000,
+      );
+      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      this.container?.appendChild(this.renderer.domElement);
+
+      this.camera.position.z = 10;
+
+      this.streaks = [];
+      this.colors = [
+        new THREE.Color(0x640dad), // Violeta
+        new THREE.Color(0x7b00ff), // Neon Indigo (Reemplaza Plum)
+        new THREE.Color(0x2e004b), // Magenta oscuro profundo
+      ];
+
+      this.init();
+      this.animate();
+
+      window.addEventListener("resize", () => this.onWindowResize());
+    }
+
+    createVerticalStreakTexture() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 64;
+      canvas.height = 512;
+      const ctx = canvas.getContext("2d");
+
+      const grad = ctx?.createLinearGradient(0, 0, 64, 0);
+      grad?.addColorStop(0, "rgba(255, 255, 255, 0)");
+      grad?.addColorStop(0.4, "rgba(255, 255, 255, 0.4)");
+      grad?.addColorStop(0.5, "rgba(255, 255, 255, 1)");
+      grad?.addColorStop(0.6, "rgba(255, 255, 255, 0.4)");
+      grad?.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+      ctx.fillStyle = grad;
+      ctx?.fillRect(0, 0, 64, 512);
+
+      // Añadir grano vertical
+      for (let i = 0; i < 2000; i++) {
+        const x = Math.random() * 64;
+        const y = Math.random() * 512;
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.05})`;
+        ctx?.fillRect(x, y, 1, Math.random() * 15);
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      return texture;
+    }
+
+    init() {
+      const streakTexture = this.createVerticalStreakTexture();
+
+      // Aumentamos a 26 franjas para mayor densidad
+      for (let i = 0; i < 26; i++) {
+        const group = new THREE.Group();
+
+        // Mayor variedad de tamaños: algunas muy finas y otras muy anchas
+        const isThin = Math.random() > 0.6;
+        const width = isThin
+          ? 0.05 + Math.random() * 0.3
+          : 1.0 + Math.random() * 5.0;
+        const height = 30 + Math.random() * 40;
+
+        const geometry = new THREE.PlaneGeometry(width, height);
+
+        const layerColors = [this.colors[0], this.colors[1], this.colors[2]];
+        const offsets = [-0.15, 0, 0.15]; // Aberración cromática más pronunciada
+
+        layerColors.forEach((color, j) => {
+          const material = new THREE.MeshBasicMaterial({
+            color: color,
+            map: streakTexture,
+            transparent: true,
+            opacity: 0.2 + Math.random() * 0.4, // Mayor opacidad base para más intensidad
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          });
+
+          const mesh = new THREE.Mesh(geometry, material);
+          mesh.position.x = offsets[j];
+          group.add(mesh);
+        });
+
+        group.position.set(
+          (Math.random() - 0.5) * 60,
+          (Math.random() - 0.5) * 10,
+          (Math.random() - 0.5) * 15,
+        );
+
+        group.userData.velocity = (Math.random() - 0.5) * 0.025;
+        group.userData.flickerSpeed = 0.8 + Math.random() * 3.5; // Flicker más dinámico
+
+        this.scene.add(group);
+        this.streaks.push(group);
+      }
+    }
+
+    onWindowResize() {
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    animate() {
+      requestAnimationFrame(() => this.animate());
+
+      const time = Date.now() * 0.001;
+
+      this.streaks.forEach((group, index) => {
+        // Desplazamiento lateral
+        group.position.x += group.userData.velocity;
+
+        // Loop infinito lateral ampliado
+        if (group.position.x > 35) group.position.x = -35;
+        if (group.position.x < -35) group.position.x = 35;
+
+        // Variación de opacidad y escala más intensa
+        group.children.forEach((mesh: any) => {
+          const flicker =
+            Math.sin(time * group.userData.flickerSpeed + index) * 0.15;
+          const baseOpacity = 0.3 + Math.sin(time * 0.5 + index) * 0.2;
+          mesh.material.opacity = Math.max(0, baseOpacity + flicker);
+        });
+
+        group.scale.x = 1 + Math.sin(time * 0.3 + index) * 0.4;
+      });
+
+      this.renderer.render(this.scene, this.camera);
+    }
+  }
+
+  new ScannedLightBackground();
+</script>
