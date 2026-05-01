@@ -1,0 +1,229 @@
+---
+import TechIcon from "./TechIcon.astro";
+import { getTech } from "../data/tech";
+
+const skills = [
+    {
+        category: "Lenguajes",
+        items: ["Java", "TypeScript", "Javascript", "Python"],
+    },
+    {
+        category: "Frameworks",
+        items: ["Spring Boot", "Angular", "NestJS", "Ionic"],
+    },
+    {
+        category: "Bases de datos",
+        items: ["PostgreSQL", "MongoDB"],
+    },
+    {
+        category: "Herramientas",
+        items: ["Git", "Docker", "AWS", "Gemini CLI"],
+    },
+    {
+        category: "Arquitecturas & Protocolos",
+        items: ["REST API", "Websocket"],
+    },
+];
+---
+
+<section class="skills-section" id="skills">
+    <h2 class="section-title reveal-title">Tech Stack</h2>
+    <div class="skills-flex-container">
+        {
+            skills.map((group) => (
+                <div class="skill-card glass-morphism reveal-card">
+                    <h3 class="skill-category reveal-category">
+                        {group.category}
+                    </h3>
+                    <div class="skill-list">
+                        {group.items.map((techName) => {
+                            const tech = getTech(techName);
+                            return (
+                                <div
+                                    class={`skill-item reveal-item ${["Docker", "AWS", "Java"].includes(tech.name) ? "flicker-hover" : ""}`}
+                                >
+                                    <TechIcon
+                                        icon={tech.icon}
+                                        name={tech.name}
+                                        color={tech.color}
+                                    />
+                                    <span class="skill-name">{tech.name}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            ))
+        }
+    </div>
+</section>
+
+<script>
+    import { createTimeline, stagger } from "animejs";
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: "0px 0px -50px 0px",
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    animateTechStack();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const section = document.querySelector(".skills-section");
+        if (section) {
+            observer.observe(section);
+        }
+    });
+
+    function animateTechStack() {
+        // Cast to any to bypass outdated @types/animejs v3 definitions
+        const tl = createTimeline() as any;
+
+        // 1. Animate Title
+        tl.add(".reveal-title", {
+            translateY: [-50, 0],
+            opacity: [0, 1],
+            duration: 1000,
+            ease: "outExpo",
+        });
+
+        // 2. Animate each card and its items as a unified group
+        const cards = document.querySelectorAll(".reveal-card");
+
+        cards.forEach((card, index) => {
+            const children = card.querySelectorAll(
+                ".reveal-category, .reveal-item",
+            );
+
+            // Add card entrance
+            tl.add(
+                card,
+                {
+                    translateY: [60, 0],
+                    opacity: [0, 1],
+                    duration: 800,
+                    ease: "outQuad",
+                },
+                index === 0 ? "-=800" : "-=650",
+            );
+
+            // Add children entrance (starts exactly with the card)
+            tl.add(
+                Array.from(children),
+                {
+                    opacity: [0, 1],
+                    scale: [0.95, 1],
+                    translateY: [10, 0],
+                    delay: stagger(50),
+                    duration: 600,
+                    ease: "outBack",
+                },
+                "-=800",
+            ); // Synchronized with the card's start
+        });
+    }
+</script>
+
+<style>
+    .skills-section {
+        padding: 100px 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .reveal-title,
+    .reveal-card,
+    .reveal-category,
+    .reveal-item {
+        opacity: 0;
+        will-change: transform, opacity;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 60px;
+        color: var(--color-primary);
+        font-size: 2.5rem;
+    }
+
+    .skills-flex-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 50px;
+    }
+
+    .skill-card {
+        padding: 30px;
+        border-right: 4px solid var(--color-primary);
+        transition: transform 0.3s ease;
+        flex: 1 1 350px;
+        max-width: 450px;
+    }
+
+    .skill-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .skill-category {
+        font-size: 1.1rem;
+        margin-bottom: 25px;
+        color: var(--color-accent);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 10px;
+        font-family: var(--font-header);
+    }
+
+    .skill-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .skill-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .skill-name {
+        font-family: var(--font-mono);
+        color: var(--color-text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .skill-item:hover .skill-name {
+        color: var(--color-text);
+    }
+
+    /* Flicker Animation */
+    .flicker-hover:hover :global(.tech-icon) {
+        animation: flicker 0.15s infinite;
+    }
+
+    @keyframes flicker {
+        0% {
+            opacity: 1;
+            filter: grayscale(0) brightness(1.5)
+                drop-shadow(0 0 5px var(--color-accent));
+        }
+        50% {
+            opacity: 0.7;
+            filter: grayscale(0) brightness(1)
+                drop-shadow(0 0 2px var(--color-accent));
+        }
+        100% {
+            opacity: 1;
+            filter: grayscale(0) brightness(1.5)
+                drop-shadow(0 0 5px var(--color-accent));
+        }
+    }
+</style>

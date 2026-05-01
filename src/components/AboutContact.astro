@@ -1,0 +1,139 @@
+---
+const personalData = {
+    githubLink: "https://github.com/maaaseee",
+    linkedinLink: "https://www.linkedin.com/in/aieta-federico/",
+    email: "federicoaieta@gmail.com",
+};
+
+const obtainFinalUrl = (url: string) => {
+    const parts = url.split("/");
+    return parts[parts.length - 1];
+};
+
+const removeDomain = (url: string) => {
+    return url.replace("https://", "").replace("www.", "");
+};
+---
+
+<section class="contact-section" id="contact">
+    <div class="content-wrapper glass-morphism">
+        <h2 class="section-title">Sobre mí & Contacto</h2>
+        <div class="about-grid">
+            <div class="about-text">
+                <p>
+                    Desarrollador Backend apasionado por construir soluciones
+                    escalables y robustas. Mi enfoque principal es el ecosistema
+                    Java con Spring Boot, donde busco constantemente aplicar las
+                    mejores prácticas de arquitectura y diseño.
+                </p>
+                <p>
+                    Como desarrollador junior, mi objetivo es integrarme en
+                    equipos dinámicos donde pueda contribuir con mis habilidades
+                    técnicas y seguir creciendo profesionalmente en el
+                    desarrollo de aplicaciones de alto impacto.
+                </p>
+            </div>
+            <div class="contact-links">
+                <div class="link-item">
+                    <span class="link-label">GITHUB_PROFILE:</span>
+                    <a
+                        href={personalData.githubLink}
+                        target="_blank"
+                        class="text-neon"
+                        >@{obtainFinalUrl(personalData.githubLink)}</a
+                    >
+                </div>
+                <div class="link-item">
+                    <span class="link-label">LINKEDIN:</span>
+                    <a
+                        href={personalData.linkedinLink}
+                        target="_blank"
+                        class="text-neon"
+                        >{removeDomain(personalData.linkedinLink)}</a
+                    >
+                </div>
+                <div class="link-item">
+                    <span class="link-label">EMAIL_PROFESIONAL:</span>
+                    <a href={`mailto:${personalData.email}`} class="text-neon"
+                        >{personalData.email}</a
+                    >
+                </div>
+            </div>
+        </div>
+        <div class="footer-hud">
+            SYSTEM_LOG: SESSION_END | VERSION: 2.0.26 | ENCRYPTION: ACTIVE
+        </div>
+    </div>
+</section>
+
+<style>
+    .contact-section {
+        padding: 100px 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .content-wrapper {
+        padding: 60px;
+        border-bottom: 4px solid var(--color-accent);
+    }
+
+    .section-title {
+        margin-bottom: 40px;
+        color: var(--color-secondary);
+    }
+
+    .about-grid {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 60px;
+    }
+
+    .about-text p {
+        color: var(--color-text-secondary);
+        line-height: 1.8;
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+    }
+
+    .contact-links {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .link-item {
+        font-family: var(--font-mono);
+    }
+
+    .link-label {
+        display: block;
+        font-size: 0.7rem;
+        color: var(--color-secondary);
+        margin-bottom: 5px;
+    }
+
+    .link-item a {
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+
+    .footer-hud {
+        margin-top: 60px;
+        font-size: 0.7rem;
+        color: rgba(123, 0, 255, 0.4);
+        text-align: center;
+        font-family: var(--font-mono);
+        letter-spacing: 2px;
+    }
+
+    @media (max-width: 768px) {
+        .about-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+        .content-wrapper {
+            padding: 30px;
+        }
+    }
+</style>

@@ -7,13 +7,13 @@ Backend Developer
 ### Language
 Java 8+
 TypeScript
+Javascript
 Python
 
 ### Frameworks
 Spring Boot 3+
 Angular 20+
 NestJS
-FastAPI
 
 ### Databases
 PostgreSQL
@@ -92,7 +92,7 @@ Tarjetas visuales que enlacen a tus repositorios de GitHub.
 
     Secundario (Neon Indigo): #7B00FF.
 
-    Acento de Alerta (Marathon Red/Orange): #FF3E00 (Este toque de naranja/rojo vibrante es icónico de Marathon para resaltar elementos críticos).
+    Acento de Alerta: #c800ffff 
 
     Superficies: Gris Oxigenado Muy Oscuro (#0A0A0A) con bordes ultra finos.
 

@@ -1,0 +1,196 @@
+---
+import ProfileImageContainer from "./ProfileImageContainer.astro";
+import type { GitHubData } from "../utils/github";
+
+interface Props {
+    name: string;
+    role: string;
+    stackSummary: string;
+    github?: GitHubData | null;
+}
+
+const { name, role, stackSummary, github } = Astro.props;
+---
+
+<section class="hero-container">
+    <div class="hud-overlay hud-top-left hero-hud">
+        SYSTEM STATUS: NOMINAL<br />
+        USER: {github?.login.toUpperCase() || "MASE"}<br />
+        REPOS_DETECTED: {github?.public_repos || 0}
+    </div>
+    <div class="hud-overlay hud-top-right hero-hud">
+        LOC: {github?.location.toUpperCase() || "UNKNOWN"}<br />
+        TZ: {github?.timezone || "UTC"}<br />
+        NET_STATUS: ENCRYPTED
+    </div>
+
+    <div class="hero-content">
+        <div class="profile-wrapper team-dialog-container">
+            <ProfileImageContainer
+                src={github?.avatar_url}
+                alt={github?.name || "Federico Aieta"}
+            />
+        </div>
+        <h1 class="hero-name" id="hero-name">
+            {
+                name
+                    .split("")
+                    .map((char) => (
+                        <span class="letter">
+                            {char === " " ? "\u00A0" : char}
+                        </span>
+                    ))
+            }
+        </h1>
+        <p class="role-text animate-up">{role}</p>
+        <div class="terminal-box glass-morphism animate-up">
+            <p class="typing-text">> {stackSummary}</p>
+        </div>
+        <div class="hero-actions animate-up">
+            <a href="#projects" class="btn-marathon">Ver proyectos</a>
+            <a href="#contact" class="btn-marathon">Contactame</a>
+        </div>
+    </div>
+
+    <div class="scanline"></div>
+</section>
+
+<style>
+    .hero-container {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        position: relative;
+        padding: 12vh 20px 20px 20px;
+    }
+
+    .hero-content {
+        text-align: center;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-wrapper {
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .hero-name {
+        font-size: clamp(3rem, 10vw, 5rem);
+        font-family: var(--font-header);
+        position: relative;
+        color: var(--color-text);
+        margin-bottom: 10px;
+        perspective: 1000px;
+        text-shadow:
+            0 0 7px var(--color-text),
+            0 0 10px var(--color-secondary),
+            0 0 21px var(--color-secondary),
+            0 0 42px var(--color-secondary),
+            0 0 82px var(--color-secondary);
+        animation: neon-flicker 4s infinite;
+    }
+
+    @keyframes neon-flicker {
+        0%,
+        18%,
+        22%,
+        25%,
+        53%,
+        57%,
+        100% {
+            text-shadow:
+                0 0 7px var(--color-text),
+                0 0 10px var(--color-secondary),
+                0 0 21px var(--color-secondary),
+                0 0 42px var(--color-secondary),
+                0 0 82px var(--color-secondary);
+            color: var(--color-text);
+        }
+        20%,
+        24%,
+        55% {
+            text-shadow: none;
+            color: rgba(255, 255, 255, 0.1);
+        }
+    }
+
+    .letter {
+        display: inline-block;
+        transform-origin: 50% 100%;
+        will-change: transform, opacity;
+    }
+
+    .role-text {
+        font-size: 3rem;
+        color: var(--color-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.35em;
+        margin-bottom: 30px;
+        font-family: var(--font-title);
+    }
+
+    .terminal-box {
+        padding: 15px 25px;
+        margin-bottom: 40px;
+        width: 80%;
+        font-size: clamp(0.75rem, 1.2vw, 1.1rem);
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        border-left: 4px solid var(--color-accent);
+    }
+
+    .typing-text {
+        font-family: var(--font-mono);
+        color: var(--color-text-secondary);
+        overflow: hidden;
+        white-space: nowrap;
+        border-right: 0.15em solid var(--color-accent);
+        animation:
+            typing 3.5s steps(40, end),
+            blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+    }
+
+    @keyframes blink-caret {
+        from,
+        to {
+            border-color: transparent;
+        }
+        50% {
+            border-color: var(--color-accent);
+        }
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .animate-up {
+        will-change: transform, opacity;
+    }
+
+    .hero-hud {
+    }
+
+    @media (max-width: 768px) {
+        .hero-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>

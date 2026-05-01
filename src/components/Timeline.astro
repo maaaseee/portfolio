@@ -1,0 +1,276 @@
+---
+const journey = [
+    {
+        date: "Febrero 2024 - Inicio",
+        title: "Inicio de cursada en la UTN",
+        description:
+            "Comienzo de la Tecnicatura Universitaria en Programación en la Universidad Tecnológica Nacional (UTN), adquiriendo bases sólidas en matemática y lógica de programación.",
+    },
+    {
+        date: "Julio 2024 - Primer proyecto",
+        title: 'Videojuego "Pop The Card"',
+        description:
+            "Primer proyecto de programación para la materia Programación 1, creando un videojuego con el motor Pygame.",
+    },
+    {
+        date: "Enero 2025",
+        title: "Formación en Spring Boot",
+        description:
+            "Realicé un curso intensivo de Spring Boot 3 a través de la plataforma Udemy.",
+    },
+    {
+        date: "Julio 2025 - Primer página web",
+        title: 'Autoservicio "NeonBits"',
+        description:
+            "Página de autoservicio para local de venta de hardware. Dashboard para el personal sobre ventas y stock.",
+    },
+    {
+        date: "Octubre 2025",
+        title: "Sala de videojuegos YoRHa",
+        description:
+            "Página web con temática del videojuego NieR: Automata. Una sala de videojuegos con ranking, chat con los visitantes de la página.",
+    },
+    {
+        date: "Diciembre 2025",
+        title: "Red Social ReelLit",
+        description:
+            "Red social dedicada a la publicación de reseñas sobre diferentes medios de entretenimiento, como juegos, películas, series, libros, etc",
+    },
+    {
+        date: "Marzo 2026",
+        title: "Billetera Pocket",
+        description:
+            "Gestor de finanzas personales creado con Spring Boot y Angular, con funciones para ligar gastos con ingresos, y cálculos de costos de viajes",
+    },
+    {
+        date: "Actualmente",
+        title: "Restaurante Palatino",
+        description:
+            "Aplicación para Android para restaurante. Plataforma de reserva de mesas, menú y promociones. Gestor interno de empleados, reservas, ventas y encuestas",
+    },
+];
+
+// Cálculo de la altura total basado en la cantidad de elementos
+// Usamos un multiplicador un poco menor (80vh) para que el scroll se sienta más ajustado
+const totalHeight = `${journey.length * 80 + 20}vh`;
+---
+
+<section class="timeline-section" id="timeline">
+    <div class="scroll-wrapper" style={`--total-height: ${totalHeight}`}>
+        <div class="sticky-container">
+            <h2 class="section-title">Trayectoria</h2>
+            <div class="horizontal-timeline">
+                <div class="timeline-track"></div>
+                {
+                    journey.map((item, index) => (
+                        <div class="timeline-item">
+                            <div class="timeline-node" />
+                            <div class="timeline-content glass-morphism">
+                                <span class="timeline-date">{item.date}</span>
+                                <h3 class="timeline-title">{item.title}</h3>
+                                <p class="timeline-desc">{item.description}</p>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const wrapper = document.querySelector(
+            ".scroll-wrapper",
+        ) as HTMLElement;
+        const timeline = document.querySelector(
+            ".horizontal-timeline",
+        ) as HTMLElement;
+
+        if (!wrapper || !timeline) return;
+
+        const updateTimeline = () => {
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const viewHeight = window.innerHeight;
+            const viewWidth = window.innerWidth;
+
+            // Calculamos el progreso basado en cuánto del wrapper ha pasado por el viewport
+            // Empezamos cuando el top del wrapper llega a 0 y terminamos cuando el bottom llega a viewHeight
+            let progress = -wrapperRect.top / (wrapperRect.height - viewHeight);
+            progress = Math.max(0, Math.min(1, progress));
+
+            // El scroll total disponible es el ancho de la timeline menos lo que ya vemos en pantalla
+            const timelineWidth = timeline.scrollWidth;
+            const maxScroll = timelineWidth - viewWidth;
+
+            if (maxScroll > 0) {
+                // Aplicamos el desplazamiento horizontal
+                const translateX = -progress * maxScroll;
+                timeline.style.transform = `translateX(${translateX}px)`;
+            }
+        };
+
+        window.addEventListener("scroll", updateTimeline, { passive: true });
+        window.addEventListener("resize", updateTimeline);
+        updateTimeline();
+    });
+</script>
+
+<style>
+    .timeline-section {
+        position: relative;
+        background: radial-gradient(
+            circle at center,
+            rgba(100, 13, 173, 0.05) 0%,
+            transparent 80%
+        );
+        overflow: visible !important; /* CRITICAL for sticky */
+    }
+
+    .scroll-wrapper {
+        height: var(
+            --total-height
+        ); /* Altura dinámica basada en la cantidad de elementos */
+        position: relative;
+        overflow: visible;
+    }
+
+    .sticky-container {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        overflow: hidden;
+        z-index: 10;
+    }
+
+    .section-title {
+        width: 100%;
+        text-align: center;
+        color: var(--color-primary);
+        font-size: 2.5rem;
+        text-shadow: 0 0 20px rgba(100, 13, 173, 0.3);
+        position: absolute;
+        top: 5%;
+        left: 0;
+    }
+
+    .horizontal-timeline {
+        display: flex;
+        flex-wrap: nowrap;
+        padding: 0 35vw;
+        gap: 600px;
+        position: relative;
+        will-change: transform;
+    }
+
+    .timeline-track {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+            to right,
+            transparent,
+            var(--color-primary) 30%,
+            var(--color-accent) 50%,
+            var(--color-primary) 90%,
+            transparent
+        );
+        z-index: 1;
+        opacity: 0.6;
+    }
+
+    .timeline-item {
+        flex: 0 0 450px;
+        position: relative;
+        padding-top: 60px;
+    }
+
+    .timeline-node {
+        position: absolute;
+        top: 1px;
+        left: 0;
+        width: 24px;
+        height: 24px;
+        background-color: #000;
+        border: 3px solid var(--color-accent);
+        border-radius: 50%;
+        z-index: 2;
+        box-shadow: 0 0 25px var(--color-accent);
+    }
+
+    .timeline-content {
+        padding: 40px;
+        border-top: 3px solid var(--color-primary);
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        background: rgba(10, 10, 10, 0.85);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .timeline-content:hover {
+        transform: translateY(-20px) scale(1.05);
+        border-top-color: var(--color-accent);
+        background: rgba(15, 15, 15, 0.95);
+        box-shadow: 0 20px 50px rgba(100, 13, 173, 0.3);
+    }
+
+    .timeline-date {
+        font-family: var(--font-mono);
+        color: var(--color-accent);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+
+    .timeline-title {
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+        color: var(--color-text);
+        line-height: 1.2;
+    }
+
+    .timeline-desc {
+        color: var(--color-text-secondary);
+        font-size: 1.05rem;
+        line-height: 1.8;
+    }
+
+    @media (max-width: 768px) {
+        .scroll-wrapper {
+            height: auto;
+        }
+        .sticky-container {
+            position: relative;
+            height: auto;
+            overflow: visible;
+            display: block;
+            padding: 80px 20px;
+        }
+        .section-title {
+            position: relative;
+            top: 0;
+            margin-bottom: 40px;
+        }
+        .horizontal-timeline {
+            flex-direction: column;
+            padding: 0;
+            gap: 80px;
+            transform: none !important;
+        }
+        .timeline-item {
+            flex: 1 1 auto;
+            width: 100%;
+            margin-top: 0 !important;
+        }
+        .timeline-track {
+            display: none;
+        }
+    }
+</style>

@@ -1,0 +1,167 @@
+---
+import TechIcon from "./TechIcon.astro";
+import { getTech } from "../data/tech";
+
+const projects = [
+    {
+        title: "Palatino",
+        description:
+            "Sistema integral de gestión para restaurantes con base de datos Supabase, gamificación para empleados y pedidos dinámicos.",
+        tech: ["Ionic", "Angular", "NestJS", "TypeScript", "Supabase"],
+        link: "https://github.com/juliancz-a/SP_GRUPO_5_Pygame",
+    },
+    {
+        title: "Pocket",
+        description:
+            "Aplicación de gestión financiera personal con autenticación segura y visualización de datos en tiempo real.",
+        tech: ["Java", "Spring Boot", "PostgreSQL", "Angular"],
+        link: "#",
+    },
+    {
+        title: "ReelLit",
+        description:
+            "Red social dirigida al público que quiere compartir sus opiniones sobre todo medio de entretenimiento. Películas, series, libros, y más.",
+        tech: ["Angular", "TypeScript", "NestJS", "MongoDB"],
+        link: "#",
+    },
+    {
+        title: "NeonBits",
+        description:
+            "Página web para una empresa de venta de hardware. Dashboard para el personal sobre ventas y stock. ",
+        tech: ["Javascript", "Express.js", "MySQL"],
+        link: "#",
+    },
+    {
+        title: "Pop The Card",
+        description:
+            "Juego realizado con el motor Pygame. Consiste en formar la mayor cantidad de palabras posibles con cartas que contienen una letra cada una y 90 segundos para completar el objetivo.",
+        tech: ["Python"],
+        link: "https://github.com/juliancz-a/SP_GRUPO_5_Pygame",
+    },
+];
+---
+
+<section class="projects-section" id="projects">
+    <h2 class="section-title">Proyectos Seleccionados</h2>
+    <div class="projects-grid">
+        {
+            projects.map((project) => (
+                <div class="project-card glass-morphism spectral">
+                    <div class="project-header">
+                        <h3 class="project-title">{project.title}</h3>
+                        <div class="project-status">STATUS: DEPLOYED</div>
+                    </div>
+                    <p class="project-desc">{project.description}</p>
+                    <div class="project-tech">
+                        {project.tech.map((t) => {
+                            const tech = getTech(t);
+                            return (
+                                <div class="tech-tag-wrapper" title={tech.name}>
+                                    <TechIcon
+                                        icon={tech.icon}
+                                        name={tech.name}
+                                        color={tech.color}
+                                        size="48px"
+                                    />
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <a
+                        href={project.link}
+                        target="_blank"
+                        class="btn-marathon project-link"
+                    >
+                        Ver más
+                    </a>
+                </div>
+            ))
+        }
+    </div>
+</section>
+
+<style>
+    .projects-section {
+        padding: 100px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 60px;
+        color: var(--color-primary);
+        font-size: clamp(2rem, 5vw, 2.5rem);
+    }
+
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 50px;
+    }
+
+    .project-card {
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid var(--color-secondary);
+        border-right: 1px solid var(--color-secondary);
+    }
+
+    .spectral {
+        background: rgba(100, 13, 173, 0.05) !important;
+        box-shadow: inset 0 0 20px rgba(123, 0, 255, 0.1);
+    }
+
+    .project-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .project-title {
+        font-family: var(--font-header);
+        color: var(--color-accent);
+        font-size: 1.5rem;
+    }
+
+    .project-status {
+        font-size: 0.7rem;
+        color: var(--color-secondary);
+        font-family: var(--font-mono);
+    }
+
+    .project-desc {
+        color: var(--color-text-secondary);
+        line-height: 1.6;
+        margin-bottom: 30px;
+        flex-grow: 1;
+    }
+
+    .project-tech {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .tech-tag-wrapper {
+        transition: transform 0.2s ease;
+    }
+
+    .tech-tag-wrapper:hover {
+        transform: translateY(-3px);
+    }
+
+    .project-link {
+        width: fit-content;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .projects-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

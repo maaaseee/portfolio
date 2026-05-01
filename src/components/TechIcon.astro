@@ -1,0 +1,46 @@
+---
+import { getIconUrl } from '../utils/icons';
+
+interface Props {
+    icon: string;
+    name: string;
+    color?: string;
+    class?: string;
+    size?: string;
+}
+
+const { icon, name, color = "ffffff", class: className, size = "45px" } = Astro.props;
+---
+
+<div class={`icon-wrapper marathon-border ${className}`} style={`width: ${size}; height: ${size};`}>
+    <img
+        src={getIconUrl(icon, color)}
+        alt={name}
+        class="tech-icon"
+        loading="lazy"
+    />
+</div>
+
+<style>
+    .icon-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
+        background: transparent;
+    }
+
+    .tech-icon {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: grayscale(0.8) brightness(0.7);
+        transition: all 0.3s ease;
+    }
+
+    :global(.skill-item:hover) .tech-icon,
+    :global(.project-card:hover) .tech-icon {
+        filter: grayscale(0) brightness(1.2);
+        transform: scale(1.1);
+    }
+</style>

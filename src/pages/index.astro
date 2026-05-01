@@ -1,46 +1,52 @@
 ---
-import Background3D from '../components/Background3D.astro';
+import Layout from "../layouts/Layout.astro";
+import Background3D from "../components/Background3D.astro";
+import Hero from "../components/Hero.astro";
+import Timeline from "../components/Timeline.astro";
+import TechStack from "../components/TechStack.astro";
+import Projects from "../components/Projects.astro";
+import AboutContact from "../components/AboutContact.astro";
+import { fetchGitHubData } from "../utils/github";
+
+const githubData = await fetchGitHubData("maaaseee");
+
+const data = {
+    name: "Federico Aieta",
+    role: "Java Backend Developer",
+    stackSummary: "JAVA | SPRING BOOT | ANGULAR | POSTGRESQL",
+    github: githubData,
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>3D Background Portfolio</title>
-		<style>
-			body {
-				margin: 0;
-				padding: 0;
-				color: white;
-				font-family: sans-serif;
-				overflow: hidden;
-			}
-			main {
-				position: relative;
-				z-index: 1;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				height: 100vh;
-				text-align: center;
-			}
-			h1 {
-				font-size: 3rem;
-				text-transform: uppercase;
-				letter-spacing: 0.5rem;
-				background: linear-gradient(45deg, #FF00FF, #4B1D3F);
-				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;
-			}
-		</style>
-	</head>
-	<body>
-		<Background3D />
-		<main>
-			<h1>Nebulous Experience</h1>
-		</main>
-	</body>
-</html>
+<Layout title={`${data.name} | Portfolio`}>
+    <Background3D />
+
+    <main class="portfolio-main">
+        <div class="hud-overlay hud-bottom-left">SESSION_ACTIVE: TRUE</div>
+        <div class="hud-overlay hud-bottom-right">
+            LOC: {githubData?.location.toUpperCase() || "BUENOS_AIRES_AR"}
+        </div>
+
+        <Hero {...data} />
+        <TechStack />
+        <Timeline />
+        <Projects />
+        <AboutContact />
+    </main>
+
+    <div class="scanline"></div>
+</Layout>
+
+<style>
+    .portfolio-main {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        overflow: visible;
+    }
+
+    /* Global Scroll Smooth */
+    :global(html) {
+        scroll-behavior: smooth;
+    }
+</style>

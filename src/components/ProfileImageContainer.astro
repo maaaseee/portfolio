@@ -1,0 +1,191 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+    src?: any;
+    alt?: string;
+}
+
+const { src = "https://github.com/maaaseee.png", alt = "Federico Aieta" } =
+    Astro.props;
+---
+
+<div class="profile-interaction-wrapper">
+    <div class="tilt-container" id="profile-card">
+        <div class="team-dialog-container-image border-neon">
+            <div class="image-inner-wrapper">
+                {
+                    typeof src === "string" && src.startsWith("http") ? (
+                        <img
+                            src={src}
+                            alt={alt}
+                            class="team-dialog-image"
+                            width="400"
+                            height="400"
+                        />
+                    ) : (
+                        <Image
+                            src={src}
+                            alt={alt}
+                            class="team-dialog-image"
+                            width={400}
+                            height={400}
+                        />
+                    )
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const card = document.getElementById("profile-card");
+
+    if (card) {
+        window.addEventListener("mousemove", (e) => {
+            const rect = card.getBoundingClientRect();
+
+            // Centro del card en la pantalla
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Distancia del mouse al centro
+            const deltaX = e.clientX - centerX;
+            const deltaY = e.clientY - centerY;
+
+            // Detección en el 100% del ancho de la pantalla
+            // Solo limitamos verticalmente para que el efecto no se active en otras secciones
+            const verticalThreshold = 700;
+
+            if (Math.abs(deltaY) < verticalThreshold) {
+                // Normalizamos la rotación
+                // Usamos divisores fijos para controlar la sensibilidad en todo el ancho
+                let rotateX = (deltaY / 400) * -15;
+                let rotateY = (deltaX / 600) * 15; // Divisor mayor para el eje X para suavizar en pantallas anchas
+
+                const maxTilt = 20;
+                rotateX = Math.max(-maxTilt, Math.min(maxTilt, rotateX));
+                rotateY = Math.max(-maxTilt, Math.min(maxTilt, rotateY));
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            } else {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+            }
+        });
+    }
+</script>
+<style>
+    .profile-interaction-wrapper {
+        width: 200px;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 10;
+        cursor: pointer;
+    }
+
+    .tilt-container {
+        transition: transform 0.3s ease-out;
+        transform-style: preserve-3d;
+        will-change: transform;
+    }
+
+    .team-dialog-container-image {
+        width: 200px;
+        height: 200px;
+        background-color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        border-radius: 2rem;
+        padding: 12px;
+        z-index: 1;
+        overflow: hidden;
+        transform-style: preserve-3d;
+        box-shadow:
+            0 20px 40px rgba(0, 0, 0, 0.6),
+            0 0 25px rgba(100, 13, 173, 0.4);
+
+        backface-visibility: hidden;
+        transform: translateZ(0);
+    }
+
+    .team-dialog-container-image::before {
+        content: "";
+        position: absolute;
+        top: -100%;
+        left: -100%;
+        width: 300%;
+        height: 300%;
+        background: conic-gradient(
+            from 0deg,
+            #640dad,
+            #7b00ff,
+            #c800ff,
+            #9d00ff,
+            #4b0082,
+            #bf00ff,
+            #640dad
+        );
+        animation: border-spin 6s linear infinite;
+        z-index: -2;
+    }
+
+    .team-dialog-container-image::after {
+        content: "";
+        position: absolute;
+        inset: 12px;
+        background: #0a0a0a;
+        border-radius: calc(2rem - 12px);
+        z-index: -1;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+    }
+
+    @keyframes border-spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .image-inner-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+        border-radius: 1.2rem;
+        overflow: hidden;
+    }
+
+    .team-dialog-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 1.2rem;
+        display: block;
+        transform: translate3d(0, 0, 50px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+        transition: transform 0.3s ease-out;
+        will-change: transform;
+        backface-visibility: hidden;
+        image-rendering: -webkit-optimize-contrast;
+    }
+
+    .profile-interaction-wrapper:hover .team-dialog-image {
+        transform: translate3d(0, 0, 80px);
+    }
+
+    @media (min-width: 768px) {
+        .profile-interaction-wrapper {
+            margin: 0 auto 3rem auto;
+        }
+    }
+</style>
