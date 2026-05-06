@@ -39,9 +39,7 @@ const skills = [
                         {group.items.map((techName) => {
                             const tech = getTech(techName);
                             return (
-                                <div
-                                    class={`skill-item reveal-item ${["Docker", "AWS", "Java"].includes(tech.name) ? "flicker-hover" : ""}`}
-                                >
+                                <div class="skill-item reveal-item">
                                     <TechIcon
                                         icon={tech.icon}
                                         name={tech.name}
@@ -199,31 +197,16 @@ const skills = [
         color: var(--color-text-secondary);
         font-size: 0.9rem;
     }
-
     .skill-item:hover .skill-name {
         color: var(--color-text);
     }
 
-    /* Flicker Animation */
-    .flicker-hover:hover :global(.tech-icon) {
-        animation: flicker 0.15s infinite;
-    }
-
-    @keyframes flicker {
-        0% {
-            opacity: 1;
-            filter: grayscale(0) brightness(1.5)
-                drop-shadow(0 0 5px var(--color-accent));
+    @media (max-width: 768px) {
+        .skills-flex-container {
+            gap: 30px;
         }
-        50% {
-            opacity: 0.7;
-            filter: grayscale(0) brightness(1)
-                drop-shadow(0 0 2px var(--color-accent));
-        }
-        100% {
-            opacity: 1;
-            filter: grayscale(0) brightness(1.5)
-                drop-shadow(0 0 5px var(--color-accent));
+        .skill-card {
+            flex: 1 1 100%;
         }
     }
 </style>

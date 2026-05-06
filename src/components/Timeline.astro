@@ -5,53 +5,66 @@ const journey = [
         title: "Inicio de cursada en la UTN",
         description:
             "Comienzo de la Tecnicatura Universitaria en Programación en la Universidad Tecnológica Nacional (UTN), adquiriendo bases sólidas en matemática y lógica de programación.",
+        image: "/utnfra.png",
     },
     {
         date: "Julio 2024 - Primer proyecto",
         title: 'Videojuego "Pop The Card"',
         description:
             "Primer proyecto de programación para la materia Programación 1, creando un videojuego con el motor Pygame.",
+        image: "/popthecard.png",
     },
     {
         date: "Enero 2025",
         title: "Formación en Spring Boot",
         description:
             "Realicé un curso intensivo de Spring Boot 3 a través de la plataforma Udemy.",
+        image: "/udemy.webp",
     },
     {
         date: "Julio 2025 - Primer página web",
-        title: 'Autoservicio "NeonBits"',
+        title: "Autoservicio NeonBits",
         description:
             "Página de autoservicio para local de venta de hardware. Dashboard para el personal sobre ventas y stock.",
+        image: "/neonbits.png",
     },
     {
         date: "Octubre 2025",
         title: "Sala de videojuegos YoRHa",
         description:
             "Página web con temática del videojuego NieR: Automata. Una sala de videojuegos con ranking, chat con los visitantes de la página.",
+        image: "/yorha.png",
     },
     {
-        date: "Diciembre 2025",
+        date: "Noviembre 2025",
         title: "Red Social ReelLit",
         description:
             "Red social dedicada a la publicación de reseñas sobre diferentes medios de entretenimiento, como juegos, películas, series, libros, etc",
+        image: "/reellit.png",
     },
     {
-        date: "Marzo 2026",
+        date: "Diciembre 2025",
         title: "Billetera Pocket",
         description:
             "Gestor de finanzas personales creado con Spring Boot y Angular, con funciones para ligar gastos con ingresos, y cálculos de costos de viajes",
+        image: "/pocket.svg",
+    },
+    {
+        date: "Marzo 2026 - Inicio Ingeniería en Informática",
+        title: "Ingeniería en Informática",
+        description:
+            "Comienzo de la Ingeniería en Informática en la Universidad de Buenos Aires (UBA)",
+        image: "/uba.jpg",
     },
     {
         date: "Actualmente",
         title: "Restaurante Palatino",
         description:
             "Aplicación para Android para restaurante. Plataforma de reserva de mesas, menú y promociones. Gestor interno de empleados, reservas, ventas y encuestas",
+        image: "/palatino.png",
     },
 ];
 
-// Cálculo de la altura total basado en la cantidad de elementos
-// Usamos un multiplicador un poco menor (80vh) para que el scroll se sienta más ajustado
 const totalHeight = `${journey.length * 80 + 20}vh`;
 ---
 
@@ -66,6 +79,13 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
                         <div class="timeline-item">
                             <div class="timeline-node" />
                             <div class="timeline-content glass-morphism">
+                                <div class="journey-visual">
+                                    <img
+                                        src={`/projects/${item.image}`}
+                                        alt=""
+                                        loading="lazy"
+                                    />
+                                </div>
                                 <span class="timeline-date">{item.date}</span>
                                 <h3 class="timeline-title">{item.title}</h3>
                                 <p class="timeline-desc">{item.description}</p>
@@ -73,6 +93,13 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
                         </div>
                     ))
                 }
+            </div>
+
+            <div class="scroll-indicator marathon-border">
+                <div class="mouse-icon">
+                    <div class="wheel"></div>
+                </div>
+                <span class="scroll-text">SCROLL PARA NAVEGAR</span>
             </div>
         </div>
     </div>
@@ -86,6 +113,9 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
         const timeline = document.querySelector(
             ".horizontal-timeline",
         ) as HTMLElement;
+        const indicator = document.querySelector(
+            ".scroll-indicator",
+        ) as HTMLElement;
 
         if (!wrapper || !timeline) return;
 
@@ -94,17 +124,13 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
             const viewHeight = window.innerHeight;
             const viewWidth = window.innerWidth;
 
-            // Calculamos el progreso basado en cuánto del wrapper ha pasado por el viewport
-            // Empezamos cuando el top del wrapper llega a 0 y terminamos cuando el bottom llega a viewHeight
             let progress = -wrapperRect.top / (wrapperRect.height - viewHeight);
             progress = Math.max(0, Math.min(1, progress));
 
-            // El scroll total disponible es el ancho de la timeline menos lo que ya vemos en pantalla
             const timelineWidth = timeline.scrollWidth;
             const maxScroll = timelineWidth - viewWidth;
 
             if (maxScroll > 0) {
-                // Aplicamos el desplazamiento horizontal
                 const translateX = -progress * maxScroll;
                 timeline.style.transform = `translateX(${translateX}px)`;
             }
@@ -124,13 +150,11 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
             rgba(100, 13, 173, 0.05) 0%,
             transparent 80%
         );
-        overflow: visible !important; /* CRITICAL for sticky */
+        overflow: visible !important;
     }
 
     .scroll-wrapper {
-        height: var(
-            --total-height
-        ); /* Altura dinámica basada en la cantidad de elementos */
+        height: var(--total-height);
         position: relative;
         overflow: visible;
     }
@@ -211,13 +235,54 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
         transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         background: rgba(10, 10, 10, 0.85);
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        position: relative;
+        overflow: hidden;
     }
 
     .timeline-content:hover {
-        transform: translateY(-20px) scale(1.05);
+        transform: translateY(-10px) scale(1.025);
         border-top-color: var(--color-accent);
         background: rgba(15, 15, 15, 0.95);
         box-shadow: 0 20px 50px rgba(100, 13, 173, 0.3);
+    }
+
+    .journey-visual {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.6s ease;
+        z-index: 0;
+        overflow: hidden;
+        mask-image: linear-gradient(135deg, transparent 20%, black 100%);
+        -webkit-mask-image: linear-gradient(
+            135deg,
+            transparent 20%,
+            black 100%
+        );
+    }
+
+    .timeline-content:hover .journey-visual {
+        opacity: 0.45;
+    }
+
+    .journey-visual img {
+        width: 120%;
+        height: 120%;
+        object-fit: cover;
+        position: absolute;
+        top: -10%;
+        right: -10%;
+        filter: grayscale(0.5) brightness(0.4) blur(1px);
+        transform: scale(1.1) rotate(5deg);
+        transition: transform 0.8s ease;
+    }
+
+    .timeline-content:hover .journey-visual img {
+        transform: scale(1) rotate(0deg);
     }
 
     .timeline-date {
@@ -227,6 +292,8 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
         display: block;
         margin-bottom: 15px;
         font-size: 1.1rem;
+        position: relative;
+        z-index: 1;
     }
 
     .timeline-title {
@@ -234,15 +301,82 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
         font-size: 1.5rem;
         color: var(--color-text);
         line-height: 1.2;
+        position: relative;
+        z-index: 1;
     }
 
     .timeline-desc {
         color: var(--color-text-secondary);
         font-size: 1.05rem;
         line-height: 1.8;
+        position: relative;
+        z-index: 1;
+    }
+
+    .scroll-indicator {
+        position: absolute;
+        bottom: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 30px;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        transition:
+            opacity 0.3s ease,
+            visibility 0.3s ease;
+        z-index: 20;
+    }
+
+    .mouse-icon {
+        width: 30px;
+        height: 50px;
+        border: 2px solid var(--color-secondary);
+        border-radius: 15px;
+        position: relative;
+    }
+
+    .wheel {
+        width: 5px;
+        height: 12px;
+        background-color: var(--color-accent);
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 25px;
+        animation: scroll-wheel 2s infinite;
+    }
+
+    .scroll-text {
+        font-family: var(--font-mono);
+        font-size: 0.9rem;
+        letter-spacing: 0.2em;
+        color: var(--color-secondary);
+        font-weight: bold;
+    }
+
+    @keyframes scroll-wheel {
+        0% {
+            opacity: 0;
+            transform: translate(-50%, 0);
+        }
+        30% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+            transform: translate(-50%, 15px);
+        }
     }
 
     @media (max-width: 768px) {
+        .scroll-indicator {
+            display: none;
+        }
         .scroll-wrapper {
             height: auto;
         }
