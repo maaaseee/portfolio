@@ -1,5 +1,6 @@
 ---
 import { getIconUrl } from '../utils/icons';
+import { Image } from 'astro:assets';
 
 interface Props {
     icon: string;
@@ -13,11 +14,13 @@ const { icon, name, color = "ffffff", class: className, size = "45px" } = Astro.
 ---
 
 <div class={`icon-wrapper marathon-border ${className}`} style={`width: ${size}; height: ${size};`}>
-    <img
+    <Image
         src={getIconUrl(icon, color)}
         alt={name}
         class="tech-icon"
         loading="lazy"
+        width={48}
+        height={48}
     />
 </div>
 

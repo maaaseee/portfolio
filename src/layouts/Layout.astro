@@ -1,4 +1,7 @@
 ---
+import Loader from '../components/Loader.astro';
+import SectionNav from '../components/SectionNav.astro';
+
 interface Props {
 	title: string;
 }
@@ -26,6 +29,8 @@ const { title } = Astro.props;
 		/>
 	</head>
 	<body>
+		<Loader />
+		<SectionNav />
 		<slot />
 	</body>
 </html>
@@ -57,7 +62,6 @@ const { title } = Astro.props;
 		background-color: rgba(0, 0, 0, 0.85);
 		color: var(--color-text);
 		font-family: var(--font-mono);
-		overflow-x: clip; /* clip doesn't break position: sticky like hidden does */
 		scrollbar-width: thin;
 		scrollbar-color: var(--color-primary) var(--color-bg);
 	}

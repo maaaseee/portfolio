@@ -1,67 +1,75 @@
 ---
+import { Image } from "astro:assets";
+
+// Import all images from assets
+const images = import.meta.glob<{ default: ImageMetadata }>(
+    "/src/assets/projects/*.{jpeg,jpg,png,gif,svg,webp}",
+    { eager: true },
+);
+
 const journey = [
     {
         date: "Febrero 2024 - Inicio",
         title: "Inicio de cursada en la UTN",
         description:
             "Comienzo de la Tecnicatura Universitaria en Programación en la Universidad Tecnológica Nacional (UTN), adquiriendo bases sólidas en matemática y lógica de programación.",
-        image: "/utnfra.png",
+        image: "/src/assets/projects/utnfra.png",
     },
     {
         date: "Julio 2024 - Primer proyecto",
         title: 'Videojuego "Pop The Card"',
         description:
             "Primer proyecto de programación para la materia Programación 1, creando un videojuego con el motor Pygame.",
-        image: "/popthecard.png",
+        image: "/src/assets/projects/popthecard.png",
     },
     {
         date: "Enero 2025",
         title: "Formación en Spring Boot",
         description:
             "Realicé un curso intensivo de Spring Boot 3 a través de la plataforma Udemy.",
-        image: "/udemy.webp",
+        image: "/src/assets/projects/udemy.webp",
     },
     {
         date: "Julio 2025 - Primer página web",
         title: "Autoservicio NeonBits",
         description:
             "Página de autoservicio para local de venta de hardware. Dashboard para el personal sobre ventas y stock.",
-        image: "/neonbits.png",
+        image: "/src/assets/projects/neonbits.png",
     },
     {
         date: "Octubre 2025",
         title: "Sala de videojuegos YoRHa",
         description:
             "Página web con temática del videojuego NieR: Automata. Una sala de videojuegos con ranking, chat con los visitantes de la página.",
-        image: "/yorha.png",
+        image: "/src/assets/projects/yorha.png",
     },
     {
         date: "Noviembre 2025",
         title: "Red Social ReelLit",
         description:
             "Red social dedicada a la publicación de reseñas sobre diferentes medios de entretenimiento, como juegos, películas, series, libros, etc",
-        image: "/reellit.png",
+        image: "/src/assets/projects/reellit.png",
     },
     {
         date: "Diciembre 2025",
         title: "Billetera Pocket",
         description:
             "Gestor de finanzas personales creado con Spring Boot y Angular, con funciones para ligar gastos con ingresos, y cálculos de costos de viajes",
-        image: "/pocket.svg",
+        image: "/src/assets/projects/pocket.svg",
     },
     {
         date: "Marzo 2026 - Inicio Ingeniería en Informática",
         title: "Ingeniería en Informática",
         description:
             "Comienzo de la Ingeniería en Informática en la Universidad de Buenos Aires (UBA)",
-        image: "/uba.jpg",
+        image: "/src/assets/projects/uba.jpg",
     },
     {
         date: "Actualmente",
         title: "Restaurante Palatino",
         description:
             "Aplicación para Android para restaurante. Plataforma de reserva de mesas, menú y promociones. Gestor interno de empleados, reservas, ventas y encuestas",
-        image: "/palatino.png",
+        image: "/src/assets/projects/palatino.png",
     },
 ];
 
@@ -80,10 +88,11 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
                             <div class="timeline-node" />
                             <div class="timeline-content glass-morphism">
                                 <div class="journey-visual">
-                                    <img
-                                        src={`/projects/${item.image}`}
-                                        alt=""
-                                        loading="lazy"
+                                    <Image
+                                        src={images[item.image].default}
+                                        alt={item.title}
+                                        width={800}
+                                        height={600}
                                     />
                                 </div>
                                 <span class="timeline-date">{item.date}</span>
@@ -105,43 +114,6 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
     </div>
 </section>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const wrapper = document.querySelector(
-            ".scroll-wrapper",
-        ) as HTMLElement;
-        const timeline = document.querySelector(
-            ".horizontal-timeline",
-        ) as HTMLElement;
-        const indicator = document.querySelector(
-            ".scroll-indicator",
-        ) as HTMLElement;
-
-        if (!wrapper || !timeline) return;
-
-        const updateTimeline = () => {
-            const wrapperRect = wrapper.getBoundingClientRect();
-            const viewHeight = window.innerHeight;
-            const viewWidth = window.innerWidth;
-
-            let progress = -wrapperRect.top / (wrapperRect.height - viewHeight);
-            progress = Math.max(0, Math.min(1, progress));
-
-            const timelineWidth = timeline.scrollWidth;
-            const maxScroll = timelineWidth - viewWidth;
-
-            if (maxScroll > 0) {
-                const translateX = -progress * maxScroll;
-                timeline.style.transform = `translateX(${translateX}px)`;
-            }
-        };
-
-        window.addEventListener("scroll", updateTimeline, { passive: true });
-        window.addEventListener("resize", updateTimeline);
-        updateTimeline();
-    });
-</script>
-
 <style>
     .timeline-section {
         position: relative;
@@ -150,7 +122,7 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
             rgba(100, 13, 173, 0.05) 0%,
             transparent 80%
         );
-        overflow: visible !important;
+        overflow: visible;
     }
 
     .scroll-wrapper {
@@ -168,7 +140,7 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
-        overflow: hidden;
+        overflow: visible;
         z-index: 10;
     }
 
@@ -186,15 +158,15 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
     .horizontal-timeline {
         display: flex;
         flex-wrap: nowrap;
-        padding: 0 35vw;
-        gap: 600px;
+        padding: 0 40vw;
+        gap: clamp(150px, 30vw, 600px);
         position: relative;
         will-change: transform;
     }
 
     .timeline-track {
         position: absolute;
-        top: 10px;
+        top: 12px;
         left: 0;
         width: 100%;
         height: 2px;
@@ -211,7 +183,7 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
     }
 
     .timeline-item {
-        flex: 0 0 450px;
+        flex: 0 0 clamp(300px, 70vw, 450px);
         position: relative;
         padding-top: 60px;
     }
@@ -230,7 +202,7 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
     }
 
     .timeline-content {
-        padding: 40px;
+        padding: clamp(20px, 4vw, 40px);
         border-top: 3px solid var(--color-primary);
         transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         background: rgba(10, 10, 10, 0.85);
@@ -269,19 +241,19 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
         opacity: 0.45;
     }
 
-    .journey-visual img {
-        width: 120%;
-        height: 120%;
+    .journey-visual :global(img) {
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         position: absolute;
-        top: -10%;
-        right: -10%;
+        top: 0;
+        right: 0;
         filter: grayscale(0.5) brightness(0.4) blur(1px);
         transform: scale(1.1) rotate(5deg);
         transition: transform 0.8s ease;
     }
 
-    .timeline-content:hover .journey-visual img {
+    .timeline-content:hover .journey-visual :global(img) {
         transform: scale(1) rotate(0deg);
     }
 
@@ -291,14 +263,14 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
         font-weight: bold;
         display: block;
         margin-bottom: 15px;
-        font-size: 1.1rem;
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
         position: relative;
         z-index: 1;
     }
 
     .timeline-title {
         margin-bottom: 15px;
-        font-size: 1.5rem;
+        font-size: clamp(1.2rem, 3vw, 1.5rem);
         color: var(--color-text);
         line-height: 1.2;
         position: relative;
@@ -307,8 +279,8 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
 
     .timeline-desc {
         color: var(--color-text-secondary);
-        font-size: 1.05rem;
-        line-height: 1.8;
+        font-size: clamp(0.85rem, 2vw, 1.05rem);
+        line-height: 1.6;
         position: relative;
         z-index: 1;
     }
@@ -322,7 +294,7 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
         flex-direction: column;
         align-items: center;
         gap: 12px;
-        padding: 15px 30px;
+        padding: clamp(10px, 2vw, 15px) clamp(20px, 4vw, 30px);
         background: rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(5px);
         transition:
@@ -374,37 +346,57 @@ const totalHeight = `${journey.length * 80 + 20}vh`;
     }
 
     @media (max-width: 768px) {
-        .scroll-indicator {
-            display: none;
-        }
-        .scroll-wrapper {
-            height: auto;
-        }
-        .sticky-container {
-            position: relative;
-            height: auto;
-            overflow: visible;
-            display: block;
-            padding: 80px 20px;
-        }
-        .section-title {
-            position: relative;
-            top: 0;
-            margin-bottom: 40px;
-        }
         .horizontal-timeline {
-            flex-direction: column;
-            padding: 0;
-            gap: 80px;
-            transform: none !important;
+            padding: 0 50vw;
         }
-        .timeline-item {
-            flex: 1 1 auto;
-            width: 100%;
-            margin-top: 0 !important;
+        .scroll-indicator {
+            bottom: 2%;
         }
-        .timeline-track {
-            display: none;
+        .scroll-text {
+            font-size: 0.7rem;
         }
     }
 </style>
+
+<script>
+    function initTimeline() {
+        const wrapper = document.querySelector(
+            ".scroll-wrapper",
+        ) as HTMLElement;
+        const timeline = document.querySelector(
+            ".horizontal-timeline",
+        ) as HTMLElement;
+
+        if (!wrapper || !timeline) return;
+
+        const updateTimeline = () => {
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const viewHeight = window.innerHeight;
+            const viewWidth = window.innerWidth;
+
+            // Calculate progress based on wrapper position relative to viewport
+            let progress = -wrapperRect.top / (wrapperRect.height - viewHeight);
+            progress = Math.max(0, Math.min(1, progress));
+
+            const timelineWidth = timeline.scrollWidth;
+            const maxScroll = timelineWidth - viewWidth;
+
+            if (maxScroll > 0) {
+                const translateX = -progress * maxScroll;
+                // Use requestAnimationFrame for smoother performance
+                requestAnimationFrame(() => {
+                    timeline.style.transform = `translateX(${translateX}px)`;
+                });
+            }
+        };
+
+        window.addEventListener("scroll", updateTimeline, { passive: true });
+        window.addEventListener("resize", updateTimeline);
+        // Initial call
+        updateTimeline();
+    }
+
+    // Run on load and after any Astro swap
+    document.addEventListener("DOMContentLoaded", initTimeline);
+    document.addEventListener("astro:after-swap", initTimeline);
+</script>

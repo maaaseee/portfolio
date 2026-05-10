@@ -1,0 +1,170 @@
+---
+const sections = [
+    { id: "hero", label: "INICIO" },
+    { id: "tech", label: "STACK" },
+    { id: "timeline", label: "TRAYECTORIA" },
+    { id: "projects", label: "PROYECTOS" },
+    { id: "contact", label: "SOBRE MÍ" },
+];
+---
+
+<nav class="section-nav" id="section-nav">
+    <div class="nav-container">
+        {
+            sections.map((section) => (
+                <a
+                    href={`#${section.id}`}
+                    class="nav-dot-wrapper"
+                    data-section={section.id}
+                    title={section.label}
+                >
+                    <span class="nav-dot" />
+                    <span class="nav-label">{section.label}</span>
+                </a>
+            ))
+        }
+    </div>
+</nav>
+
+<style>
+    .section-nav {
+        position: fixed;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 100;
+        pointer-events: none;
+    }
+
+    .nav-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 20px 5px;
+        pointer-events: auto;
+        background: transparent;
+    }
+
+    .nav-dot-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-decoration: none;
+        position: relative;
+        padding: 12px 10px;
+        transition: all 0.2s ease-out;
+        cursor: pointer;
+    }
+
+    .nav-dot {
+        width: 5px;
+        height: 25px;
+        background: var(--color-secondary);
+        opacity: 0.25;
+        border-radius: 3px;
+        transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        flex-shrink: 0;
+    }
+
+    .nav-label {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--color-text);
+        letter-spacing: 0.2em;
+        opacity: 0;
+        transform: translateX(-15px);
+        transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        white-space: nowrap;
+        pointer-events: none;
+        padding: 4px 0;
+        background: transparent;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        text-transform: uppercase;
+    }
+
+    /* Hover State */
+    .nav-dot-wrapper:hover .nav-dot {
+        opacity: 0.8;
+        height: 40px;
+        background: var(--color-secondary);
+        box-shadow: 0 0 15px var(--color-secondary);
+    }
+
+    .nav-dot-wrapper:hover .nav-label {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* Active State */
+    .nav-dot-wrapper.active .nav-dot {
+        height: 60px;
+        width: 7px;
+        opacity: 1;
+        background: var(--color-secondary);
+        box-shadow: 0 0 20px var(--color-secondary);
+    }
+
+    .nav-dot-wrapper.active .nav-label {
+        opacity: 1;
+        transform: translateX(0);
+        color: var(--color-secondary);
+        background: transparent;
+        font-weight: bold;
+        font-size: 0.8rem;
+        text-shadow: 0 0 15px var(--color-secondary);
+    }
+    @media (max-width: 1024px) {
+        .section-nav {
+            left: 10px;
+        }
+        .nav-label {
+            display: none;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .section-nav {
+            display: none;
+        }
+    }
+</style>
+
+<script>
+    function initSectionNav() {
+        const navItems = document.querySelectorAll(".nav-dot-wrapper");
+        const sections = Array.from(navItems)
+            .map((item) =>
+                document.getElementById(
+                    item.getAttribute("data-section") || "",
+                ),
+            )
+            .filter(Boolean);
+
+        const observerOptions = {
+            root: null,
+            rootMargin: "-20% 0px -70% 0px",
+            threshold: 0,
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    navItems.forEach((item) => {
+                        item.classList.toggle(
+                            "active",
+                            item.getAttribute("data-section") ===
+                                entry.target.id,
+                        );
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach((section) => {
+            if (section) observer.observe(section);
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", initSectionNav);
+    document.addEventListener("astro:after-swap", initSectionNav);
+</script>

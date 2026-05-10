@@ -14,25 +14,13 @@ const { src = "https://github.com/maaaseee.png", alt = "Federico Aieta" } =
     <div class="tilt-container" id="profile-card">
         <div class="team-dialog-container-image border-neon">
             <div class="image-inner-wrapper">
-                {
-                    typeof src === "string" && src.startsWith("http") ? (
-                        <img
-                            src={src}
-                            alt={alt}
-                            class="team-dialog-image"
-                            width="400"
-                            height="400"
-                        />
-                    ) : (
-                        <Image
-                            src={src}
-                            alt={alt}
-                            class="team-dialog-image"
-                            width={400}
-                            height={400}
-                        />
-                    )
-                }
+                <Image
+                    src={src}
+                    alt={alt}
+                    class="team-dialog-image"
+                    width={400}
+                    height={400}
+                />
             </div>
         </div>
     </div>
